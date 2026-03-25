@@ -38,9 +38,10 @@ def load_object(file_path):
         raise CustomException(e, sys)
 
 
-def evaluate_models(X_train, y_train, X_test, y_test, models):
+def evaluate_models(X_train, y_train, X_test, y_test, models, params=None):
     """
     Train and evaluate multiple models, returning a report of R2 scores.
+    Optionally performs hyperparameter tuning via GridSearchCV.
 
     Args:
         X_train: Training features
@@ -48,17 +49,38 @@ def evaluate_models(X_train, y_train, X_test, y_test, models):
         X_test:  Test features
         y_test:  Test target
         models:  dict of {"model_name": model_instance}
+        params:  dict of {"model_name": {param_grid}} (optional)
 
     Returns:
         dict of {"model_name": r2_score}
     """
+    from sklearn.model_selection import RandomizedSearchCV
+
     try:
         report = {}
 
         for model_name, model in models.items():
             logging.info(f"Training model: {model_name}")
 
-            model.fit(X_train, y_train)
+            # --- Hyperparameter tuning (if params provided) ---
+            if params and model_name in params and params[model_name]:
+                logging.info(f"  Running RandomizedSearchCV for {model_name} …")
+                rs = RandomizedSearchCV(
+                    estimator=model,
+                    param_distributions=params[model_name],
+                    n_iter=10,
+                    cv=3,
+                    scoring="r2",
+                    n_jobs=-1,
+                    verbose=0,
+                    random_state=42,
+                )
+                rs.fit(X_train, y_train)
+                model = rs.best_estimator_
+                logging.info(f"  Best params: {rs.best_params_}")
+            else:
+                model.fit(X_train, y_train)
+
             y_train_pred = model.predict(X_train)
             y_test_pred = model.predict(X_test)
 
