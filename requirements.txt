@@ -5,4 +5,5 @@ matplotlib>=3.4.0
 seaborn>=0.11.0
 catboost
 xgboost
+flask
 #-e .

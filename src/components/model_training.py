@@ -16,9 +16,9 @@ from catboost import CatBoostRegressor
 from xgboost import XGBRegressor
 from sklearn.metrics import r2_score
 
-from src.pipeline.exception import CustomException
-from src.pipeline.logger import logging
-from src.pipeline.utils import save_object, evaluate_models
+from src.exception import CustomException
+from src.logger import logging
+from src.utils import save_object, evaluate_models
 
 
 @dataclass

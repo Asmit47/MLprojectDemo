@@ -1,5 +1,5 @@
 import sys
-from src.pipeline.logger import logging
+from src.logger import logging
 
 
 def error_message_detail(error, error_detail: sys):
