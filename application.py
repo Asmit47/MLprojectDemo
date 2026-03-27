@@ -2,8 +2,8 @@ from flask import Flask, request, render_template
 
 from src.pipeline.predict_pipeline import CustomData, PredictPipeline
 
-application = Flask(__name__)
-application = app
+app = Flask(__name__)
+application = app  # ← Beanstalk looks for 'application', not 'app'
 
 
 @app.route("/")
