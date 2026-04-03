@@ -2,17 +2,17 @@ from flask import Flask, request, render_template
 
 from src.pipeline.predict_pipeline import CustomData, PredictPipeline
 
-app = Flask(__name__)
-application = app  # ← Beanstalk looks for 'application', not 'app'
+application = Flask(__name__)
 
 
-@app.route("/")
+
+@application.route("/")
 def index():
     """Render the prediction form."""
     return render_template("index.html", result=None)
 
 
-@app.route("/predict", methods=["GET", "POST"])
+@application.route("/predict", methods=["GET", "POST"])
 def predict():
     """
     Read form data, build a DataFrame via CustomData,
@@ -39,4 +39,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    application.run(host="0.0.0.0", port=5000)
